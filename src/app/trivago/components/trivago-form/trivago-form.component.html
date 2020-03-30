@@ -7,8 +7,8 @@
     </mat-card-header>
     <mat-card-content>
       <mat-list>
-        <h3 matSubheader *ngIf="data && data.length > 0">
-          {{ data.length | number }} rows found from {{ completed === 0 ? '1' : completed  }} of
+        <h3 matSubheader *ngIf="table.data && table.data.length > 0">
+          {{ table.data.length | number }} rows found from {{ completed === 0 ? '1' : completed  }} of
           {{ files.length }} files.
         </h3>
         <h3 matSubheader *ngIf="completed > 0 && completed === files.length">Merge complete</h3>
@@ -35,7 +35,7 @@
     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
     style="display:none;" />
 
-  <div class="content" *ngIf="data && data.length > 0">
-    <app-trivago-table [tableData]="data" [columns]="headers" [displayedColumns]="displayedColumns"></app-trivago-table>
+  <div class="content" *ngIf="table.data && table.data.length > 0">
+    <app-trivago-table [displayedColumns]="displayedColumns"></app-trivago-table>
   </div>
 </div>

@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
-import { TrivagoTableDataSource, TrivagoTableItem } from './trivago-table-datasource';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { TableService } from '../../services/table.service';
 
 @Component({
   selector: 'app-trivago-table',
@@ -10,16 +10,18 @@ import { TrivagoTableDataSource, TrivagoTableItem } from './trivago-table-dataso
   styleUrls: ['./trivago-table.component.scss']
 })
 export class TrivagoTableComponent implements AfterViewInit, OnInit {
+  dataSource: MatTableDataSource<any>;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatTable) table: MatTable<TrivagoTableItem>;
-  dataSource: TrivagoTableDataSource;
+  @ViewChild(MatTable) table: MatTable<any>;
+  @Input() displayedColumns: any;
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  constructor(public tableService: TableService) {
+  }
 
   ngOnInit() {
-    this.dataSource = new TrivagoTableDataSource();
+    this.dataSource = new MatTableDataSource(this.tableService.data);
   }
 
   ngAfterViewInit() {

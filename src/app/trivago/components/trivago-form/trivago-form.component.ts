@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Papa, ParseResult } from 'ngx-papaparse';
+import { TableService } from '../../services/table.service';
 
 @Component({
   selector: 'app-trivago-form',
@@ -7,16 +8,15 @@ import { Papa, ParseResult } from 'ngx-papaparse';
   styleUrls: ['./trivago-form.component.scss']
 })
 export class TrivagoFormComponent implements OnInit {
-  data: any[];
-  headers: any[];
+  // data: any[];
   displayedColumns: any[];
   completed: number;
 
   @ViewChild('fileUpload', { static: false }) fileUpload: ElementRef; files = [];
-  constructor(private papa: Papa) { }
+  constructor(private papa: Papa, public table: TableService) { }
 
   ngOnInit(): void {
-    this.displayedColumns = ['PartnerRef', 'trivagoID', 'POS', 'Base Bid'];
+    this.displayedColumns = ['PartnerRef', 'trivagoID', 'POS', 'Base Bid', 'Base Bid Cost'];
   }
 
   private readFiles() {
@@ -27,7 +27,7 @@ export class TrivagoFormComponent implements OnInit {
   }
 
   onClick() {
-    this.data = [];
+    this.table.data = [];
     this.completed = 0;
 
     const fileUpload = this.fileUpload.nativeElement; fileUpload.onchange = () => {
@@ -52,10 +52,9 @@ export class TrivagoFormComponent implements OnInit {
         // tslint:disable-next-line: no-string-literal
         const cursor = results.meta['cursor'];
         // tslint:disable-next-line: no-string-literal
-        this.headers = results.meta['fields'];
-
+        this.table.headers = results.meta['fields'];
+        this.table.data = [...this.table.data, ...results.data];
         file.progress = cursor / fileSize * 100;
-        this.data = [...this.data, ...results.data];
       },
       complete: (result, csv) => {
         file.progress = 100;
