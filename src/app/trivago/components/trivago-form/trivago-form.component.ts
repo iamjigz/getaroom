@@ -8,12 +8,15 @@ import { Papa, ParseResult } from 'ngx-papaparse';
 })
 export class TrivagoFormComponent implements OnInit {
   data: any[];
+  headers: any[];
+  displayedColumns: any[];
   completed: number;
 
   @ViewChild('fileUpload', { static: false }) fileUpload: ElementRef; files = [];
   constructor(private papa: Papa) { }
 
   ngOnInit(): void {
+    this.displayedColumns = ['PartnerRef', 'trivagoID', 'POS', 'Base Bid'];
   }
 
   private readFiles() {
@@ -48,6 +51,8 @@ export class TrivagoFormComponent implements OnInit {
       chunk: (results: ParseResult, parser) => {
         // tslint:disable-next-line: no-string-literal
         const cursor = results.meta['cursor'];
+        // tslint:disable-next-line: no-string-literal
+        this.headers = results.meta['fields'];
 
         file.progress = cursor / fileSize * 100;
         this.data = [...this.data, ...results.data];

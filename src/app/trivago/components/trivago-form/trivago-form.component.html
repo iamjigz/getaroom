@@ -25,7 +25,7 @@
       </mat-list>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button color="warn" (click)="onClick()">
+      <button mat-button color="accent" (click)="onClick()">
         <mat-icon>publish</mat-icon>
         Upload
       </button>
@@ -34,4 +34,8 @@
   <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple"
     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
     style="display:none;" />
+
+  <div class="content" *ngIf="data && data.length > 0">
+    <app-trivago-table [tableData]="data" [columns]="headers" [displayedColumns]="displayedColumns"></app-trivago-table>
+  </div>
 </div>

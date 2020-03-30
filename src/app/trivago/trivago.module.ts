@@ -6,14 +6,21 @@ import { MaterialModule } from './../core/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TrivagoPageComponent } from './components/trivago-page/trivago-page.component';
 import { TrivagoFormComponent } from './components/trivago-form/trivago-form.component';
+import { TrivagoTableComponent } from './components/trivago-table/trivago-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
-  declarations: [TrivagoPageComponent, TrivagoFormComponent],
+  declarations: [TrivagoPageComponent, TrivagoFormComponent, TrivagoTableComponent],
   imports: [
     CommonModule,
     TrivagoRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ]
 })
 export class TrivagoModule { }
