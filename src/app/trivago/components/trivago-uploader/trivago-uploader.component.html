@@ -1,0 +1,45 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Trivago Bid Compiler </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <section id="uploader" *ngIf="show">
+      <file-upload [control]="fileUploadControl" multiple="true" animation="true"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+      </file-upload>
+    </section>
+
+    <section id="list">
+      <mat-list dense>
+        <!-- <h3 matSubheader *ngIf="table.data && table.data.length > 0">
+          {{ table.data.length | number }} rows found from {{ completed === 0 ? '1' : completed  }} of
+          {{ files.length }} files.
+        </h3> -->
+        <!-- <h3 matSubheader *ngIf="completed > 0 && completed === files.length">Merge complete</h3> -->
+        <mat-list-item *ngFor="let file of files">
+          <mat-icon color="accent" mat-list-icon>{{ file.progress === 100 ? 'check_circle_outline' : 'check_circle' }}
+          </mat-icon>
+          <div matLine>
+            <p mat-caption>{{ file.data.name }}</p>
+          </div>
+          <div matLine>
+            <mat-progress-bar mode="determinate" color="primary" [value]="file.progress"></mat-progress-bar>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </section>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onClick()" [disabled]="!(fileUploadControl.value.length > 0)"
+      [matBadge]="fileUploadControl.value.length" matBadgeColor="accent">
+      <mat-icon>play_circle_outline</mat-icon>
+      Merge
+    </button>
+    <button mat-raised-button color="warn" (click)="clear()">
+      <mat-icon>clear</mat-icon>
+      Clear
+    </button>
+  </mat-card-actions>
+</mat-card>
