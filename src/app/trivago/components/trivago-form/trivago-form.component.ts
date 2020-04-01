@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Papa, ParseResult } from 'ngx-papaparse';
+import { Papa } from 'ngx-papaparse';
 import { TableService } from '../../services/table.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-trivago-form',
@@ -8,7 +9,6 @@ import { TableService } from '../../services/table.service';
   styleUrls: ['./trivago-form.component.scss']
 })
 export class TrivagoFormComponent implements OnInit {
-  // data: any[];
   displayedColumns: any[];
   completed: number;
 
@@ -47,7 +47,6 @@ export class TrivagoFormComponent implements OnInit {
     let tempData = [];
     file.inProgress = true;
 
-    console.log(fileDate);
     this.papa.parse(fileData, {
       header: true,
       worker: true,
@@ -57,8 +56,6 @@ export class TrivagoFormComponent implements OnInit {
         const cursor = results.meta['cursor'];
         // tslint:disable-next-line: no-string-literal
         this.table.headers = results.meta['fields'];
-        // this.table.data = [...this.table.data, ...results.data];
-
         tempData = [...tempData, ...results.data];
         file.progress = cursor / fileSize * 100;
       },
@@ -72,18 +69,10 @@ export class TrivagoFormComponent implements OnInit {
   }
 
   private async setDate(array, date) {
+    const d = moment(date, 'YYYYMMDD').format('MMM DD YYYY');
+
     // tslint:disable-next-line: no-string-literal
-    await array.map(row => row['Date'] = date);
+    await array.map(row => row['Date'] = d);
     return this.table.data = [...this.table.data, ...array];
-  }
-
-  count() {
-    const data = this.table.data;
-    // tslint:disable-next-line: no-string-literal
-    const count1 = data.reduce((acc, cur) => cur['Date'] === '20191205' ? acc++ : acc, 0);
-
-    // tslint:disable-next-line: no-string-literal
-    const count2 = data.reduce((acc, cur) => cur['Date'] === '20191206' ? acc++ : acc, 0);
-    console.log(count1, count2);
   }
 }
