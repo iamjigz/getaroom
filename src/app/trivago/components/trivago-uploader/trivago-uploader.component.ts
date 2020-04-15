@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FileUploadValidators, FileUploadControl } from '@iplab/ngx-file-upload';
+import { Papa } from 'ngx-papaparse';
+import { TableService } from '../../services/table.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-trivago-uploader',
@@ -10,10 +13,13 @@ export class TrivagoUploaderComponent implements OnInit {
   public fileUploadControl = new FileUploadControl(FileUploadValidators.filesLimit(35));
   public files: Array<{ data, progress }>;
   public show = true;
+  public inProgress = 0;
+  public displayedColumns: any[];
 
-  constructor() { }
+  constructor(private papa: Papa, public table: TableService) { }
 
   ngOnInit(): void {
+    this.displayedColumns = ['Date', 'PartnerRef', 'trivagoID', 'POS', 'Base Bid'];
   }
 
   private toggleListVisibility() {
@@ -24,12 +30,64 @@ export class TrivagoUploaderComponent implements OnInit {
     this.fileUploadControl.clear();
     this.files = [];
     this.show = true;
+    this.inProgress = 0;
+  }
+
+  public export(): void {
+    const csv = this.papa.unparse(this.table.data);
+    const blob = new Blob([csv]);
+    const a = window.document.createElement('a');
+
+    a.href = window.URL.createObjectURL(blob);
+    a.download = `Trivago Bid Compiler.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   public onClick(): void {
-    this.files = [];
+    this.table.data = this.files = [];
     this.show = false;
     this.toggleListVisibility();
     this.fileUploadControl.value.map(file => this.files.push({ data: file, progress: 0 }));
+    this.inProgress = this.files.length;
+    this.files.map(file => this.parse(file));
   }
+
+  // TODO: transfer all logic to service instead
+  private parse(file) {
+    const fileData = file.data;
+    const fileSize = file.data.size;
+    const matchDate = file.data.name.match(/\d{8}/);
+    const fileDate = matchDate[0];
+    let tempData = [];
+
+    this.papa.parse(fileData, {
+      header: true,
+      worker: true,
+      skipEmptyLines: true,
+      chunk: (results, parser) => {
+        // tslint:disable-next-line: no-string-literal
+        const cursor = results.meta['cursor'];
+        // tslint:disable-next-line: no-string-literal
+        this.table.headers = results.meta['fields'];
+        tempData = [...tempData, ...results.data];
+        file.progress = cursor / fileSize * 100;
+      },
+      complete: (result, csv) => {
+        this.setDate(tempData, fileDate);
+        file.progress = 100;
+        this.inProgress--;
+      }
+    });
+  }
+
+  private async setDate(array, date) {
+    const d = moment(date, 'YYYYMMDD').format('MMM DD YYYY');
+    // tslint:disable-next-line: no-string-literal
+    await array.map(row => row['Date'] = d);
+    return this.table.data = [...this.table.data, ...array];
+  }
+
+
 }

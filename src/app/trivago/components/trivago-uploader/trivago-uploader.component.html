@@ -18,7 +18,7 @@
         </h3> -->
         <!-- <h3 matSubheader *ngIf="completed > 0 && completed === files.length">Merge complete</h3> -->
         <mat-list-item *ngFor="let file of files">
-          <mat-icon color="accent" mat-list-icon>{{ file.progress === 100 ? 'check_circle_outline' : 'check_circle' }}
+          <mat-icon color="primary" mat-list-icon>{{ file.progress === 100 ? 'check_circle' : 'check_circle_outline' }}
           </mat-icon>
           <div matLine>
             <p mat-caption>{{ file.data.name }}</p>
@@ -33,7 +33,7 @@
 
   <mat-card-actions>
     <button mat-raised-button color="primary" (click)="onClick()" [disabled]="!(fileUploadControl.value.length > 0)"
-      [matBadge]="fileUploadControl.value.length" matBadgeColor="accent">
+      [(matBadge)]="inProgress ? inProgress : fileUploadControl.value.length" matBadgeColor="accent">
       <mat-icon>play_circle_outline</mat-icon>
       Merge
     </button>
@@ -41,5 +41,16 @@
       <mat-icon>clear</mat-icon>
       Clear
     </button>
+
+    <div class="float-right">
+      <button mat-raised-button color="warn" (click)="export()" [disabled]="!(table.data && table.data.length > 0)">
+        <mat-icon>get_app</mat-icon>
+        Export
+      </button>
+    </div>
   </mat-card-actions>
 </mat-card>
+
+<div class="content" *ngIf="table.data && table.data.length > 0">
+  <app-trivago-table [displayedColumns]="displayedColumns"></app-trivago-table>
+</div>
