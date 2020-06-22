@@ -21,7 +21,7 @@
           <mat-icon color="primary" mat-list-icon>{{ file.progress === 100 ? 'check_circle' : 'check_circle_outline' }}
           </mat-icon>
           <div matLine>
-            <p mat-caption>{{ file.data.name }}</p>
+            <p mat-caption>{{ file.name }}</p>
           </div>
           <div matLine>
             <mat-progress-bar mode="determinate" color="primary" [value]="file.progress"></mat-progress-bar>
@@ -51,6 +51,6 @@
   </mat-card-actions>
 </mat-card>
 
-<div class="content" *ngIf="table.data && table.data.length > 0">
+<!-- <div class="content" *ngIf="table.data && table.data.length > 0">
   <app-trivago-table [displayedColumns]="displayedColumns"></app-trivago-table>
-</div>
+</div> -->

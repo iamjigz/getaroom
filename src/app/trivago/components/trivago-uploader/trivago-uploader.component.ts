@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FileUploadValidators, FileUploadControl } from '@iplab/ngx-file-upload';
 import { Papa } from 'ngx-papaparse';
 import { TableService } from '../../services/table.service';
+import { UploadService } from '../../services/upload.service';
+
 import * as moment from 'moment';
 
 @Component({
@@ -11,12 +13,12 @@ import * as moment from 'moment';
 })
 export class TrivagoUploaderComponent implements OnInit {
   public fileUploadControl = new FileUploadControl(FileUploadValidators.filesLimit(35));
-  public files: Array<{ data, progress }>;
+  public files: Array<any>;
   public show = true;
   public inProgress = 0;
   public displayedColumns: any[];
 
-  constructor(private papa: Papa, public table: TableService) { }
+  constructor(private papa: Papa, public uploader: UploadService, public table: TableService) { }
 
   ngOnInit(): void {
     this.displayedColumns = ['Date', 'PartnerRef', 'trivagoID', 'POS', 'Base Bid'];
@@ -49,10 +51,25 @@ export class TrivagoUploaderComponent implements OnInit {
     this.table.data = this.files = [];
     this.show = false;
     this.toggleListVisibility();
-    this.fileUploadControl.value.map(file => this.files.push({ data: file, progress: 0 }));
-    this.inProgress = this.files.length;
-    this.files.map(file => this.parse(file));
+    // this.fileUploadControl.value.map(file => this.files.push(file));
+    // this.inProgress = this.files.length;
+    // this.files.map(file => this.parse(file));
+    console.log('files', this.files);
+    this.uploadFiles(this.fileUploadControl.value);
   }
+
+  uploadFiles(files) {
+    const formData = new FormData();
+
+    for (const file of files) {
+      formData.append('files', file);
+    }
+
+    this.uploader.uploadSourceFiles(formData).subscribe(res => {
+      console.log('Upload Complete', res);
+    });
+  }
+
 
   // TODO: transfer all logic to service instead
   private parse(file) {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TrivagoFormComponent } from './trivago-form.component';
+import { ShopFormComponent } from './shop-form.component';
 
-describe('TrivagoFormComponent', () => {
-  let component: TrivagoFormComponent;
-  let fixture: ComponentFixture<TrivagoFormComponent>;
+describe('ShopFormComponent', () => {
+  let component: ShopFormComponent;
+  let fixture: ComponentFixture<ShopFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TrivagoFormComponent ]
+      declarations: [ ShopFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TrivagoFormComponent);
+    fixture = TestBed.createComponent(ShopFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -10,12 +10,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 
 import { TrivagoPageComponent } from './components/trivago-page/trivago-page.component';
-import { TrivagoFormComponent } from './components/trivago-form/trivago-form.component';
 import { TrivagoTableComponent } from './components/trivago-table/trivago-table.component';
 import { TrivagoUploaderComponent } from './components/trivago-uploader/trivago-uploader.component';
 
 @NgModule({
-  declarations: [TrivagoPageComponent, TrivagoFormComponent, TrivagoTableComponent, TrivagoUploaderComponent],
+  declarations: [TrivagoPageComponent, TrivagoTableComponent, TrivagoUploaderComponent],
   imports: [
     CommonModule,
     TrivagoRoutingModule,
